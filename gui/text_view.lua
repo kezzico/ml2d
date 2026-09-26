@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------
 -- Love2D Mobile Template
--- app/gui/View.lua
+-- ml2d/gui/View.lua
 --
 -- Reactive view drawable.
 -- Provides a container for child drawables that can reactively update its layout and appearance.
@@ -24,8 +24,8 @@
 -- local textView = TextView({ text = "Hello World", color = {1, 1, 1, 1}, size = 24 })
 -- local textView = TextView("Hello World")
 
-local styles = require "app.styles"
-local View = require("app.gui.view")
+local _, styles = pcall(require, 'app.styles')
+local View = require "ml2d.gui.view"
 
 local function TextView(text_state_or_text, style)
   local self = { }

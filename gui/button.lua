@@ -1,7 +1,6 @@
-local Clickable = require 'app.gui.clickable'
-local TextView = require 'app.gui.text_view'
-local styles = require 'app.styles'
-
+local Clickable = require 'ml2d.gui.clickable'
+local TextView = require 'ml2d.gui.text_view'
+local _, styles = pcall(require, 'app.styles')
 local function Button(button_state_or_text, style, onclick)
     if type(style) == "function" then
         onclick = style

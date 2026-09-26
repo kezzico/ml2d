@@ -4,7 +4,7 @@ function HttpClient()
     local callbacks = { }
     local next_id = 1
 
-    local thread = love.thread.newThread("app/web/http_thread.lua")
+    local thread = love.thread.newThread("ml2d/web/http_thread.lua")
     thread:start()
     
     return {

@@ -1,5 +1,5 @@
 -- Love2D Mobile Template
--- app/gui/StackView.lua
+-- ml2d/gui/StackView.lua
 --
 -- Reactive stack view drawable.
 -- Provides a vertical stack layout for child drawables with configurable heights and gaps.
@@ -25,8 +25,8 @@
 ----------------------------------------------------------------------
 
 
-local eval_units = require("app.gui.eval_units")
-local View = require("app.gui.view")
+local eval_units = require "ml2d.gui.eval_units"
+local View = require "ml2d.gui.view"
 
 local function StackView(style, children)
   local self = { }

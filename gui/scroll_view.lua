@@ -1,5 +1,5 @@
 -- Love2D Mobile Template
--- app/gui/ScrollView.lua
+-- ml2d/gui/ScrollView.lua
 --
 -- Reactive scroll view drawable.
 -- Provides a vertically scrollable container for child drawables with reusable cells.

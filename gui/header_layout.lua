@@ -1,9 +1,9 @@
-local styles = require "app.styles"
-local ShelfView = require "app.gui.shelf_view"
-local StackView = require "app.gui.stack_view"
-local Button = require "app.gui.button"
-local TextView = require "app.gui.text_view"
-local View = require "app.gui.view"
+local _, styles = pcall(require, 'app.styles')
+local ShelfView = require "ml2d.gui.shelf_view"
+local StackView = require "ml2d.gui.stack_view"
+local Button = require "ml2d.gui.button"
+local TextView = require "ml2d.gui.text_view"
+local View = require "ml2d.gui.view"
 
 local function HeaderLayout(title, child)
     return StackView {

@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------
 -- Love2D Mobile Template
--- app/gui/View.lua
+-- ml2d/gui/View.lua
 --
 -- Reactive view drawable.
 -- Provides a container for child drawables that can reactively update its layout and appearance.
@@ -39,7 +39,7 @@
 --   { View { }, View { } }) -- children
 
 
-local eval_units = require("app.gui.eval_units")
+local eval_units = require "ml2d.gui.eval_units"
 
 local function View(style, children)
   style = style or {}

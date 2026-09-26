@@ -1,5 +1,5 @@
-local TextView = require "app.gui.text_view"
-local Clickable = require "app.gui.clickable"
+local TextView = require "ml2d.gui.text_view"
+local Clickable = require "ml2d.gui.clickable"
 
 local function BackButton()
 	local go_back = function() navigator:pop()  end

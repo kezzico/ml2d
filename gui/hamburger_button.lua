@@ -1,6 +1,5 @@
-local Clickable = require "app.gui.clickable"
-local styles = require "app.styles"
-
+local Clickable = require "ml2d.gui.clickable"
+local _, styles = pcall(require, 'app.styles')
 local function HamburgerButton(onclick)
     local self = { }
 

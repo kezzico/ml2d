@@ -1,4 +1,4 @@
-local Clickable = require "app.gui.clickable"
+local Clickable = require "ml2d.gui.clickable"
 
 local function MediaPlayButton(state, onclick)
     local self = { }

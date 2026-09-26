@@ -1,4 +1,4 @@
-local styles = require "app.styles"
+local _, styles = pcall(require, 'app.styles')
 local counter = 0
 
 local function SliderControl(slider_state, onchange)

@@ -1,7 +1,6 @@
-local styles = require("app.styles")
-
-local HamburgerButton = require("app.gui.hamburger_button")
-local eval_units = require("app.gui.eval_units")
+local _, styles = pcall(require, 'app.styles')
+local HamburgerButton = require("ml2d.gui.hamburger_button")
+local eval_units = require("ml2d.gui.eval_units")
 
 local function HamburgerMenu(style_menu_main, menu, main_view)
     menu = menu or style_menu_main[1]

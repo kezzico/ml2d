@@ -1,6 +1,4 @@
-local styles = require "app.styles"
-
-local function Clickable(onclick, children)
+local _, styles = pcall(require, 'app.styles')local function Clickable(onclick, children)
   children = children or { }
   local frame = { x = 0, y = 0, w = 0, h = 0 }
   local pressed = false
