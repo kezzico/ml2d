@@ -4,22 +4,24 @@ function Cache()
 	local image_cache = { }
 	
 	return {
-		font = function(fontname)
-			if fontname == nil or fontname[1] == nil then
-				return nil
-			end
-
-			local fontsize = fontname[2] or 120
-
-			local key = fontname[1]..','..fontsize
-
-			local font = font_cache[key]
+		font = function(params)			
+			local font = font_cache[params]
 
 			if font == nil then
-				-- print("load font "..key)
-				font = love.graphics.newFont(fontname[1], fontsize, "none")
+				-- print("[cache] cache hit for font "..params[1], "key="..params)
+				local fontfile = params and params[1]
+				if fontfile == nil then
+					print("ERROR: font path missing")
+					return nil
+				end
 
-				font_cache[key] = font
+				local fontsize = params and params.size or 120
+				local hinting = params and params.hinting or "normal"
+				local dpi = 3 -- params and params.dpi or 3.0
+				
+				font = love.graphics.newFont(fontfile, fontsize, hinting, dpi)
+
+				font_cache[params] = font
 			end
 
 			return font

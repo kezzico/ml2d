@@ -43,14 +43,10 @@ local function TextView(text_state_or_text, style)
   end
 
   self.draw = function(self, w, h)
-      local font_scale = (text_state.size or style.size or 30.0) / 60.0
-      local font = 
-        text_state.font or 
-        style.font or 
-        styles.fonts.default
-        cache.font({"assets/fonts/joystix.ttf"})
+      -- { "assets/fonts/HelveticaNeueMedium.otf", size = 30, hinting = "normal", dpi = 3.0 }
+      local font = cache.font( text_state.font or style.font or styles.fonts.default )
         
-      local maxWidth, wrappedtext = font:getWrap( text_state.text, w / font_scale )
+      local maxWidth, wrappedtext = font:getWrap( text_state.text, w )
       local textWidth = maxWidth
       local textHeight = font:getHeight(text_state.text) * #wrappedtext
 
@@ -68,17 +64,17 @@ local function TextView(text_state_or_text, style)
       -- using a large font and scaling it down to get better visual quality
       -- there seems to be some side effects from doing this however.
       -- certains fonts will display strange artifacts. 
-      love.graphics.scale(font_scale, font_scale)
+      -- love.graphics.scale(font_scale, font_scale)
       love.graphics.setColor(text_color)
       love.graphics.setFont(font)
 
       if align == "center" then
-        love.graphics.translate(0, -textHeight * 0.5 + h / font_scale * 0.5)
+        love.graphics.translate(0, -textHeight * 0.5 + h * 0.5)
       elseif align == "bottom" then
-        love.graphics.translate(0, h / font_scale - textHeight)
+        love.graphics.translate(0, h - textHeight)
       end
       
-      love.graphics.printf(text_state.text, 0, 0, w / font_scale, justify)
+      love.graphics.printf(text_state.text, 0, 0, w, justify)
 
       love.graphics.pop()
     end
