@@ -42,42 +42,36 @@ local function TextView(text_state_or_text, style)
 
   self.draw = function(self, w, h)
       -- { "assets/fonts/HelveticaNeueMedium.otf", size = 30, hinting = "normal", dpi = 3.0 }
-      local font = cache.font( text_state.font or style.font or styles.fonts.default )
+      local font = cache.font( text_state.font or styles.fonts.default )
         
       local maxWidth, wrappedtext = font:getWrap( text_state.text, w )
       local textWidth = maxWidth
-      local textHeight = font:getHeight(text_state.text) * #wrappedtext
 
-      local align = text_state.align or style.align or "center" -- top, center, bottom
-      local justify = text_state.justify or style.justify or "center" -- left, center, right
-      local text_color = text_state.color or style.color or styles.colors.text
+      local textHeight = font:getAscent() * #wrappedtext
+
+      local align = text_state.align or "center" -- top, center, bottom
+      local justify = text_state.justify or "center" -- left, center, right
 
       love.graphics.push("all")
-
       if DEBUG then
-        love.graphics.setColor(0, 1, 0, 0.5)
-        love.graphics.rectangle("fill", 0, 0, w, h)
+        love.graphics.setColor(1, 0, 0, 0.5)
+        love.graphics.rectangle("fill", 0, 0, w, textHeight)
       end
-
-      -- using a large font and scaling it down to get better visual quality
-      -- there seems to be some side effects from doing this however.
-      -- certains fonts will display strange artifacts. 
-      -- love.graphics.scale(font_scale, font_scale)
-      love.graphics.setColor(text_color)
-      love.graphics.setFont(font)
 
       if align == "center" then
         love.graphics.translate(0, -textHeight * 0.5 + h * 0.5)
       elseif align == "bottom" then
         love.graphics.translate(0, h - textHeight)
       end
-      
+
+      if text_state.color ~= nil then love.graphics.setColor(text_state.color) end
+      if font ~= nil then love.graphics.setFont(font) end
       love.graphics.printf(text_state.text, 0, 0, w, justify)
 
       love.graphics.pop()
     end
 
-    return View(table.mush(text_state, style), { self })
+    return View(text_state, { self })
 end
 
 return TextView
