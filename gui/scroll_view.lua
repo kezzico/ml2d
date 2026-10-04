@@ -178,7 +178,7 @@ local function ScrollView(scroll_state, cellForRow)
       -- t = t + child_height
       -- print("precalc t = ", t)
     end
-    for i=render_start_index,render_end_index do
+    for i=math.max(render_start_index,1),render_end_index do
       local child_height = height_at_index(i)
       local cell = cellForRow(self, scroll_state.items[i], i)
       table.insert(cells_for_reuse, cell)
