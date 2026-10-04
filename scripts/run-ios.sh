@@ -122,6 +122,7 @@ xcodebuild \
   CURRENT_PROJECT_VERSION="$IOS_BUILD_NUMBER" \
   CODE_SIGN_STYLE=Automatic \
   -allowProvisioningUpdates \
+  -quiet \
   build
 
 while true; do
@@ -149,57 +150,62 @@ while true; do
         echo
         read -r -p "Connect/trust a device, then press Enter to check again (q to quit): " retry
 
-        if [ "$retry" = "q" ]; then
+        if [[ "$retry" =~ ^[Qq]$ ]]; then
             exit 0
         fi
 
         continue
     fi
 
-    echo
-    echo "Available iOS devices:"
-    echo
-
-    for i in "${!device_ids[@]}"; do
-        printf "%d) %s\n" "$((i + 1))" "${device_names[$i]}"
-    done
-
-    echo
-    read -r -p "Select device [1]: " selection
-    selection=${selection:-1}
-
-    if [[ "$selection" =~ ^[0-9]+$ ]] &&
-       [ "$selection" -ge 1 ] &&
-       [ "$selection" -le "${#device_ids[@]}" ]; then
-
-        DEVICE_ID="${device_ids[$((selection - 1))]}"
-        echo "Selected: ${device_names[$((selection - 1))]}"
-
-        # if xcrun fails give option to try again
-        if xcrun devicectl device install app \
-            --device "$DEVICE_ID" \
-            "$BUILD_DIR/love.app"; then
-
-            # launch the app
-            xcrun devicectl device process launch \
-                --device "$DEVICE_ID" \
-                "$IOS_APP_ID"            
-
-            popd
-            break
-        else
-            echo "Install failed for $IOS_APP_NAME."
-            read -r -p "Try again? [Y/n]: " retry
-            if [[ "$retry" =~ ^[Nn]$ ]]; then
-                popd
-                exit 1
-            fi
-        fi
+    if [ "${#device_ids[@]}" -eq 1 ]; then
+        DEVICE_ID="${device_ids[0]}"
+        echo
+        echo "Selected: ${device_names[0]}"
 
     else
-        echo "Invalid device selection."
+        echo
+        echo "Available iOS devices:"
+        echo
+
+        for i in "${!device_ids[@]}"; do
+            printf "%d) %s\n" "$((i + 1))" "${device_names[$i]}"
+        done
+
+        echo
+        read -r -p "Select device [1]: " selection
+        selection=${selection:-1}
+
+        if [[ "$selection" =~ ^[0-9]+$ ]] &&
+           [ "$selection" -ge 1 ] &&
+           [ "$selection" -le "${#device_ids[@]}" ]; then
+
+            DEVICE_ID="${device_ids[$((selection - 1))]}"
+            echo "Selected: ${device_names[$((selection - 1))]}"
+
+        else
+            echo "Invalid device selection."
+            continue
+        fi
+    fi
+
+    # if xcrun fails give option to try again
+    if xcrun devicectl device install app \
+        --device "$DEVICE_ID" \
+        "$BUILD_DIR/love.app"; then
+
+        xcrun devicectl device process launch \
+            --device "$DEVICE_ID" \
+            "$IOS_APP_ID"
+
+        popd
+        break
+    else
+        echo "Install failed for $IOS_APP_NAME."
+        read -r -p "Try again? [Y/n]: " retry
+
+        if [[ "$retry" =~ ^[Nn]$ ]]; then
+            popd
+            exit 1
+        fi
     fi
 done
-
-# Check for keystore and create one if not found
-
