@@ -51,14 +51,18 @@ function table.contains(table, element)
 end
 
 function table.mush(...)
-  local mush = { }
-  for _, tbl in ipairs({...}) do
+  local args = {...}
+  local mush = args[1] or {}
+
+  for i = 2, #args do
+    local tbl = args[i]
     if type(tbl) == 'table' then
       for key, value in pairs(tbl) do
         mush[key] = value
       end
     end
   end
+
   return mush
 end
 

@@ -29,10 +29,6 @@ local View = require "ml2d.gui.view"
 
 local function TextView(text_state_or_text, style)
   local self = { }
-  -- style is cloned to prevent weird side effects --
-  style = table.clone(style) or { }
-
-  -- local text_state = style or { text = "" }
   local text_state = { text = "" }
 
   if type(text_state_or_text) == "string" or type(text_state_or_text) == "number" then
@@ -41,6 +37,8 @@ local function TextView(text_state_or_text, style)
     text_state = text_state_or_text
     text_state.text = text_state.text or ""
   end
+
+  table.mush(text_state, style)
 
   self.draw = function(self, w, h)
       -- { "assets/fonts/HelveticaNeueMedium.otf", size = 30, hinting = "normal", dpi = 3.0 }
