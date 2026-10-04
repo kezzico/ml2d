@@ -52,6 +52,8 @@ local function ScrollView(scroll_state, cellForRow)
   scroll_state.offset = scroll_state.offset or 0
   scroll_state.velocity = scroll_state.velocity or 0
 
+  cellForRow = cellForRow or scroll_state.cellForRow
+
   local cell_queue = { }
 
   self.id = "scroll_view"
