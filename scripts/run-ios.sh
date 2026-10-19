@@ -100,17 +100,19 @@ echo "Setting iOS bundle identifier: $IOS_APP_ID"
 
 BUILD_DIR=build/Release-iphoneos
 
-xcodebuild \
-  -project love.xcodeproj \
-  -scheme liblove-ios \
-  -configuration Release \
-  -sdk iphoneos \
-  DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
-  CODE_SIGN_STYLE=Automatic \
-  -allowProvisioningUpdates \
-  build
 
-xcodebuild \
+# time xcodebuild \
+#   -project love.xcodeproj \
+#   -scheme liblove-ios \
+#   -configuration Release \
+#   -sdk iphoneos \
+#   DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+#   CODE_SIGN_STYLE=Automatic \
+#   -allowProvisioningUpdates \
+#   -quiet \
+#   build
+
+time xcodebuild \
   -project love.xcodeproj \
   -scheme love-ios \
   -configuration Release \
