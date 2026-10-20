@@ -20,7 +20,7 @@ fi
 if [ -z "${IOS_APP_ID:-}" ]; then
   read -r -p "Enter iOS bundle identifier: " IOS_APP_ID
   export IOS_APP_ID
-  printf 'IOS_APP_ID=%s\n' "$IOS_APP_ID" >> .env
+  printf 'IOS_APP_NAME=%s\n' "$IOS_APP_NAME" >> .env
 fi
 
 if [ -z "${IOS_APP_NAME:-}" ]; then
@@ -93,7 +93,7 @@ echo "Setting iOS bundle identifier: $IOS_APP_ID"
 
 # plist buddy is replaced by variables injected into xcode build
 # /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $IOS_APP_ID" "$PLIST"
-# /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName $IOS_APP_NAME" "$PLIST"
+/usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName $IOS_APP_NAME" "$PLIST"
 # /usr/libexec/PlistBuddy -c "Set :CFBundleName $IOS_APP_NAME" "$PLIST"
 # /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $IOS_VERSION" "$PLIST"
 # /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $IOS_BUILD_NUMBER" "$PLIST"
