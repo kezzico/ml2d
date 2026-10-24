@@ -41,37 +41,39 @@
 
 local eval_units = require "ml2d.gui.eval_units"
 
-local function View(style, children)
-  style = style or {}
-  children = children or style or { }
-  local frame = { x = 0, y = 0, w = 0, h = 0 }
-
+local function View(state, children)
+  state = state or {}
+  children = children or state or { }
+  
   return {
     draw = function(self, w, h)
-      local border_width = style.border and style.border.width or 0
+      local lx, ly = love.graphics.transformPoint(0, 0)
+      state.frame = { x = lx, y = ly, w = w, h = h }
 
-      local padding = style.padding or { 0, 0 }
+      local border_width = state.border and state.border.width or 0
+
+      local padding = state.padding or { 0, 0 }
       local total_padding_x = eval_units((type(padding) == "table" and padding[2] or padding or 0), w) + border_width
       local total_padding_y = eval_units((type(padding) == "table" and padding[1] or padding or 0), h) + border_width
 
-      local offset = style.offset
+      local offset = state.offset
       local offset_x = eval_units((type(offset) == "table" and offset[2] or offset or 0), w)
       local offset_y = eval_units((type(offset) == "table" and offset[1] or offset or 0), h)
 
       love.graphics.push()
       love.graphics.translate(offset_x, offset_y)
 
-      if style.backgroundColor then
+      if state.backgroundColor then
         love.graphics.push("all")
-        love.graphics.setColor(style.backgroundColor)
+        love.graphics.setColor(state.backgroundColor)
         love.graphics.rectangle("fill", 0, 0, w, h)
         love.graphics.pop()
       end
       
-      if style.border then
+      if state.border then
         love.graphics.push("all")
-        love.graphics.setColor(style.border.color)
-        love.graphics.setLineWidth(style.border.width)
+        love.graphics.setColor(state.border.color)
+        love.graphics.setLineWidth(state.border.width)
         love.graphics.rectangle("line", 0, 0, w, h)
         love.graphics.pop()
       end
