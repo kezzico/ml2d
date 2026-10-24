@@ -1,9 +1,27 @@
+local svg_parser = require "ml2d.svg.parser"
+
 function Cache()
 	local font_cache = { }
 
 	local image_cache = { }
+
+	local svg_cache = { }
 	
 	return {
+		svg = function(svgname)
+			if svg_cache[svgname] == nil then
+				print("[cache hit]", svgname)
+				local svg_text = love.filesystem.read("string", svgname)
+				local svg_dom = svg_parser:parse(svg_text)
+
+				svg_cache[svgname] = svg_dom
+
+				return svg_dom
+			else
+				return svg_cache[svgname]
+			end
+		end,
+
 		font = function(params)			
 			local font = font_cache[params]
 
