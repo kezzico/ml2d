@@ -77,6 +77,24 @@ string.split = function(str, sep)
   return fields
 end
 
+string.mush = function(...)
+  local args = {...}
+  local mush = args[1] or ""
+  local separator = " "
+  for i = 2, #args do
+    local m = args[i]
+    if type(m) == 'string' then
+      mush = mush .. separator .. m
+    elseif type(m) == 'number' then
+      mush = mush .. separator .. tostring(m)
+    elseif type(m) == 'table' then
+      mush = mush .. separator .. string.mush(table.unpack(m))
+    end
+  end
+
+  return mush
+end
+
 --- clamp a number between a lower and upper bound (by @clem)
 --- @param x number
 --- @param lower_bound number
