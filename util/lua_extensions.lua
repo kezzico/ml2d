@@ -66,6 +66,12 @@ function table.mush(...)
   return mush
 end
 
+function table.index_of(t, value)
+  for i, v in ipairs(t) do
+    if v == value then return i end 
+  end
+  return nil
+end
 -- split a string by a separator
 -- @param str string
 -- @param sep string
