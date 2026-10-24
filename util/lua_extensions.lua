@@ -185,3 +185,11 @@ function math.step(n, ...)
 
   return p
 end
+function math.factors(n)
+  local factors = {}
+  for i = 1, n do
+    if n % i == 0 then table.insert(factors, i) end
+  end
+
+  return factors
+end
