@@ -1,5 +1,6 @@
 local svg_render = require "ml2d.svg.renderer"
 local calc_vector_rect = require "ml2d.svg.calc_vector_rect"
+local View = require "ml2d.gui.view"
 
 local function extract_id(asset)
   local asset_path, element_id = string.match((asset or ""), "([^#]+)#?(.*)")
@@ -8,21 +9,21 @@ end
 
 local function SvgButton(style_or_asset, onclick)
   local self = { }
-  local style = nil
+  local state = nil
   if type(style_or_asset) == "table" then
-    style = style_or_asset
+    state = style_or_asset
     local a, e = extract_id(style_or_asset[1])
-    style.asset = style.asset or a
-    style.element_id = style.element_id or e
+    state.asset = state.asset or a
+    state.element_id = state.element_id or e
     
   elseif type(style_or_asset) == "string" then
-    style = { }
-    style.asset, style.element_id = extract_id(style_or_asset)
+    state = { }
+    state.asset, state.element_id = extract_id(style_or_asset)
   end
 
-  style.highlight_fill = style.highlight_fill or { type = "color", color = hexToColor(0xFFFFFF, 0.5, 0.0) }
+  state.highlight_fill = state.highlight_fill or { type = "color", color = hexToColor(0xFFFFFF, 0.5, 0.0) }
 
-  local frame = { x = 0, y = 0, w = 0, h = 0 }
+  -- local frame = { x = 0, y = 0, w = 0, h = 0 }
   local pressed = false
 
   self.onpress = function() 
@@ -42,24 +43,21 @@ local function SvgButton(style_or_asset, onclick)
   end
 
   self.hit = function(self, x, y)
-    return x >= frame.x and x <= frame.x + frame.w and y >= frame.y and y <= frame.y + frame.h
+    return x >= state.frame.x and x <= state.frame.x + state.frame.w and y >= state.frame.y and y <= state.frame.y + state.frame.h
   end
 
   self.draw = function(self, w, h)
-    local lx, ly = love.graphics.transformPoint(0, 0)
-    frame = { x = lx, y = ly, w = w, h = h }
-
-    local svg = cache.svg(style.asset)
-    local vector = (style.element_id and svg[style.element_id]) or svg
+    local svg = cache.svg(state.asset)
+    local vector = (state.element_id and svg[state.element_id]) or svg
     local rect = calc_vector_rect(vector)
 
-    local s = w / rect[3]
+    local s = math.min(w / rect[3], h / rect[4])
     love.graphics.push()
     love.graphics.scale(s, s)
 
     if pressed then 
       local pop_fill = vector[1].fill
-      vector[1].fill = style.highlight_fill
+      vector[1].fill = state.highlight_fill
       svg_render(vector)
       vector[1].fill = pop_fill
     else
@@ -71,7 +69,7 @@ local function SvgButton(style_or_asset, onclick)
     table.insert(clickables, self)
   end
 
-  return self
+  return View(state, { self })
 end
 
 return SvgButton
