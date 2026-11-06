@@ -83,10 +83,10 @@ string.split = function(str, sep)
   return fields
 end
 
-string.mush = function(...)
+string.mush = function(separator, ...)
   local args = {...}
   local mush = args[1] or ""
-  local separator = " "
+  local separator = separator or ""
   for i = 2, #args do
     local m = args[i]
     if type(m) == 'string' then
