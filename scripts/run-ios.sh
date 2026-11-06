@@ -74,6 +74,14 @@ fi
 
 # bundle the game assets into dist/
 ./ml2d/scripts/bundle.sh
+# Package the game
+echo "Creating app.love..."
+pushd dist >/dev/null
+zip -r app.love . -x "app.love"
+popd >/dev/null
+
+echo "Bundle created: dist/app.love"
+
 cp dist/app.love ios/platform/xcode/app.love
 
 if ! grep -q 'app.love in Resources' ios/platform/xcode/love.xcodeproj/project.pbxproj; then
@@ -126,6 +134,8 @@ time xcodebuild \
   -allowProvisioningUpdates \
   -quiet \
   build
+
+echo "build artifact at >> `pwd`/$BUILD_DIR/love.app"
 
 while true; do
     devices=$(xcrun devicectl list devices | tail -n +3)

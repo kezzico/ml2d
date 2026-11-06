@@ -54,20 +54,24 @@ if [ -n "$ANDROID_VERSION_NAME" ]; then
     sed -i '' "s/^app.version_name=.*/app.version_name=$ANDROID_VERSION_NAME/" android/gradle.properties
 fi
 
-# Create dist directory
-rm -rf dist
-mkdir -p dist
+# # Create dist directory
+# rm -rf dist
+# mkdir -p dist
 
-echo "Bundling love game source code and assets..."
-find . -name "*.lua" -type f -not -path "./android/*" | while read lua_file; do
-    mkdir -p "dist/$(dirname "$lua_file")"
-    cp "$lua_file" "dist/$lua_file"
-done
+# echo "Bundling love game source code and assets..."
+# find . -name "*.lua" -type f -not -path "./android/*" | while read lua_file; do
+#     mkdir -p "dist/$(dirname "$lua_file")"
+#     cp "$lua_file" "dist/$lua_file"
+# done
 
-if [ -d "assets" ]; then
-    cp -r assets dist/
-fi
+# if [ -d "assets" ]; then
+#     cp -r assets dist/
+# fi
 
+# rm -rf android/app/src/embed/assets/*
+# cp -r dist/ android/app/src/embed/assets/
+
+./ml2d/scripts/bundle.sh
 rm -rf android/app/src/embed/assets/*
 cp -r dist/ android/app/src/embed/assets/
 

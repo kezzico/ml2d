@@ -52,28 +52,30 @@ if [ ! -d "android" ]; then
 fi
 
 # Create dist directory
-rm -rf dist
-mkdir -p dist
+# rm -rf dist
+# mkdir -p dist
 
-echo "bundle love game source code and assets..."
-# Compile all Lua files with LuaJIT
-find . -name "*.lua" -type f -not -path "./android/*" | while read lua_file; do
-  mkdir -p "dist/$(dirname "$lua_file")"
-    #   if [ "$lua_file" != "conf.lua" ]; then  # Skip conf.lua as it's a special case
-    #     echo "Compiling $lua_file..."
-    #     luajit -b "$lua_file" "dist/${lua_file%.lua}.lua"
-    # else
-    #     cp "$lua_file" "dist/$lua_file"  # Copy conf.lua as-is
-    # fi
+# echo "bundle love game source code and assets..."
+# # Compile all Lua files with LuaJIT
+# find . -name "*.lua" -type f -not -path "./android/*" | while read lua_file; do
+#   mkdir -p "dist/$(dirname "$lua_file")"
+#     #   if [ "$lua_file" != "conf.lua" ]; then  # Skip conf.lua as it's a special case
+#     #     echo "Compiling $lua_file..."
+#     #     luajit -b "$lua_file" "dist/${lua_file%.lua}.lua"
+#     # else
+#     #     cp "$lua_file" "dist/$lua_file"  # Copy conf.lua as-is
+#     # fi
 
-  cp "$lua_file" "dist/$lua_file"
-done
-if [ -d "assets" ]; then
-  cp -r assets "dist/assets"
-fi
+#   cp "$lua_file" "dist/$lua_file"
+# done
+# if [ -d "assets" ]; then
+#   cp -r assets "dist/assets"
+# fi
+
 
 # Copy assets directory
-cp -r assets dist/
+# cp -r assets dist/
+./ml2d/scripts/bundle.sh
 rm -rf android/app/src/embed/assets/*
 cp -r dist/ android/app/src/embed/assets/
 
