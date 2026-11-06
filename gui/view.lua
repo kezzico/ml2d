@@ -47,8 +47,6 @@ local function View(state, children)
   
   return {
     draw = function(self, w, h)
-      local lx, ly = love.graphics.transformPoint(0, 0)
-      state.frame = { x = lx, y = ly, w = w, h = h }
 
       local border_width = state.border and state.border.width or 0
 
@@ -62,6 +60,9 @@ local function View(state, children)
 
       love.graphics.push()
       love.graphics.translate(offset_x, offset_y)
+
+      local lx, ly = love.graphics.transformPoint(0, 0)
+      state.frame = { x = lx, y = ly, w = w, h = h }
 
       if state.backgroundColor then
         love.graphics.push("all")
