@@ -13,8 +13,15 @@ extern float stop_offsets[8];
 extern float stop_colors[32];
 extern int stop_count;
 
-extern vec2 gradient_bounds; // e.g., the total SVG canvas width & height
 extern mat3 transform;
+varying vec2 svg_position;
+
+#ifdef VERTEX
+vec4 position(mat4 transform_projection, vec4 vertex_position) {
+    svg_position = vertex_position.xy;
+    return transform_projection * vertex_position;
+}
+#endif
 
 // returns vec4 with rgba from index i*4
 vec4 get_stop_color(int i) {
@@ -52,13 +59,7 @@ vec4 gradient_color(float t) {
 }
 
 vec4 effect(vec4 color, Image tex, vec2 uv, vec2 sc) {
-    // size of the svg image (2413x800 in my test graphic) as gradient_bounds.
-    // but we send every triangle to the shader individually... so this breaks
-    vec2 canvas_pixels = uv * gradient_bounds;
-
-    // then get the position on the gradient by reversing the transform
-    // and applying it to canvas_pixel
-    vec3 local_pos = inverse(transform) * vec3(canvas_pixels, 1.0);
+    vec3 local_pos = inverse(transform) * vec3(svg_position, 1.0);
 
     // affinity gradients always runs on the X axis,
     // so assume local_pos.y will be 0 after applying the inverse transform
@@ -69,31 +70,6 @@ vec4 effect(vec4 color, Image tex, vec2 uv, vec2 sc) {
 }
 
 ]]
-
--- local shader_source =[[
--- extern vec4 color_stop_1;
--- extern vec4 color_stop_2;
--- extern vec2 gradient_bounds; // e.g., the total SVG canvas width & height
--- extern mat3 transform;
-
--- vec4 effect(vec4 color, Image tex, vec2 uv, vec2 sc) {
---     //mat3 svg_matrix = mat3(
---     //        5.63357e-14,  920.032,      0.0,  // Column 1 (a, b, 0)
---     //       -5621.72,      3.44231e-13,  0.0,  // Column 2 (c, d, 0)
---     //        2296.32,      677.0,        1.0   // Column 3 (e, f, 1)
---     //    );
---     // 1. Convert local shape UV (0-1) to absolute SVG canvas pixel coordinates
---     vec2 canvas_pixels = uv * gradient_bounds;
-    
---     // 2. Bring those canvas pixels into the gradient's local 0-1 space using the inverse matrix
---     vec3 local_pos = inverse(transform) * vec3(canvas_pixels, 1.0);
-    
---     // 3. Sample along the Y axis of the gradient space (or whichever axis the matrix targets)
---     float t = clamp(local_pos.x, 0.0, 1.0);
-    
---     return mix(color_stop_1, color_stop_2, t);
--- }
--- ]]
 love.graphics.validateShader(true, shader_source)
 local shader = love.graphics.newShader(shader_source)
 

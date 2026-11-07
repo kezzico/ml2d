@@ -188,10 +188,6 @@ function svg_parser:traverse_tree (dom, group, parent_tag, origin_x, origin_y)
 				object.fill = { type = "color", color = self.hex_to_color(fill_color or "000", fill_opacity or 1.0) }
 			elseif fill_url ~= nil then
 				object.fill = self:get_fill(fill_url)
-				-- store the width and height of the object in the fill 
-				-- so the shader knows the gradient bounds
-				object.fill.width = tag["@width"] or dom.width
-				object.fill.height = tag["@height"] or dom.height
 			else
 				object.fill = { type = "color", color = {0,0,0,1}}
 			end
