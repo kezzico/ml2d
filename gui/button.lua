@@ -23,7 +23,7 @@ local function Button(button_state_or_text, style, onclick)
     button_state.color = button_state.color or style.color or styles.colors.text or hexToColor(0xFFFFFF) 
     button_state.padding = button_state.padding or 20
     button_state.backgroundColor = button_state.backgroundColor or hexToColor(0xFF00FF) 
-    button_state.size = button_state.size or 16
+    button_state.font = button_state.font or style.font or styles.fonts.button
 
     local clickable = Clickable(onclick, {
         TextView(button_state), 

@@ -1,6 +1,6 @@
 local svg_parser = require "ml2d.svg.parser"
 
-function Cache()
+local function Cache()
 	local font_cache = { }
 
 	local image_cache = { }
@@ -22,24 +22,27 @@ function Cache()
 			end
 		end,
 
-		font = function(params)			
-			local font = font_cache[params]
+		font = function(params)
+			local fontfile = params and params[1]
+			if fontfile == nil then
+				print("[cache] font path missing")
+				return nil
+			end
 
+			local fontsize = params.size or params[2] or 120
+			local hinting = params.hinting or "none"
+			local dpi = params.dpi or 1.0
+			local key = table.concat({
+				fontfile,
+				tostring(fontsize),
+				hinting,
+				tostring(dpi)
+			}, "\0")
+
+			local font = font_cache[key]
 			if font == nil then
-				-- print("[cache] cache hit for font "..params[1], "key="..params)
-				local fontfile = params and params[1]
-				if fontfile == nil then
-					print("ERROR: font path missing")
-					return nil
-				end
-
-				local fontsize = params and params.size or 120
-				local hinting = params and params.hinting or "normal"
-				local dpi = 3 -- params and params.dpi or 3.0
-				
 				font = love.graphics.newFont(fontfile, fontsize, hinting, dpi)
-
-				font_cache[params] = font
+				font_cache[key] = font
 			end
 
 			return font

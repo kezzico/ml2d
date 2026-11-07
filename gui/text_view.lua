@@ -1,9 +1,8 @@
 ----------------------------------------------------------------------
 -- Love2D Mobile Template
--- ml2d/gui/View.lua
+-- ml2d/gui/TextView.lua
 --
--- Reactive view drawable.
--- Provides a container for child drawables that can reactively update its layout and appearance.
+-- Drawable that renders text using a font descriptor and supports alignment and justification.
 --
 -- Copyright (c) 2026 Lee Irvine
 -- Licensed under the MIT License.
@@ -20,16 +19,19 @@
 -- Returns:
 --   a View containing the text view drawable.
 -- Usage example:
--- local textView = TextView("Hello World", { color = {1, 1, 1, 1}, size = 24 })
--- local textView = TextView({ text = "Hello World", color = {1, 1, 1, 1}, size = 24 })
+-- local textView = TextView("Hello World", {
+--   color = {1, 1, 1, 1},
+--   font = { "assets/fonts/HelveticaNeueMedium.otf", size = 24 }
+-- })
 -- local textView = TextView("Hello World")
 
-local _, styles = pcall(require, 'app.styles')
+local styles = require "app.styles"
 local View = require "ml2d.gui.view"
 
 local function TextView(text_state_or_text, style)
   local self = { }
   local text_state = { text = "" }
+  style = table.clone(style) or { }
 
   if type(text_state_or_text) == "string" or type(text_state_or_text) == "number" then
     text_state.text = text_state_or_text
@@ -38,40 +40,35 @@ local function TextView(text_state_or_text, style)
     text_state.text = text_state.text or ""
   end
 
-  table.mush(text_state, style)
-
   self.draw = function(self, w, h)
-      -- { "assets/fonts/HelveticaNeueMedium.otf", size = 30, hinting = "normal", dpi = 3.0 }
-      local font = cache.font( text_state.font or styles.fonts.default )
-        
-      local maxWidth, wrappedtext = font:getWrap( text_state.text, w )
-      local textWidth = maxWidth
+    local font_spec = text_state.font or style.font or styles.fonts.medium
+    local font = type(font_spec) == "table" and cache.font(font_spec) or font_spec
+    local _, wrappedtext = font:getWrap(text_state.text, w)
+    local text_height = font:getHeight() * #wrappedtext
+    local align = text_state.align or style.align or "center"
+    local justify = text_state.justify or style.justify or "center"
+    local text_color = text_state.color or style.color or styles.colors.text
 
-      local textHeight = font:getAscent() * #wrappedtext
-
-      local align = text_state.align or "center" -- top, center, bottom
-      local justify = text_state.justify or "center" -- left, center, right
-
-      love.graphics.push("all")
-      if DEBUG then
-        love.graphics.setColor(1, 0, 0, 0.5)
-        love.graphics.rectangle("fill", 0, 0, w, textHeight)
-      end
-
-      if align == "center" then
-        love.graphics.translate(0, -textHeight * 0.5 + h * 0.5)
-      elseif align == "bottom" then
-        love.graphics.translate(0, h - textHeight)
-      end
-
-      if text_state.color ~= nil then love.graphics.setColor(text_state.color) end
-      if font ~= nil then love.graphics.setFont(font) end
-      love.graphics.printf(text_state.text, 0, 0, w, justify)
-
-      love.graphics.pop()
+    love.graphics.push("all")
+    if DEBUG then
+      love.graphics.setColor(0, 1, 0, 0.5)
+      love.graphics.rectangle("fill", 0, 0, w, h)
     end
 
-    return View(text_state, { self })
+    love.graphics.setFont(font)
+    love.graphics.setColor(text_color)
+
+    if align == "center" then
+      love.graphics.translate(0, -text_height * 0.5 + h * 0.5)
+    elseif align == "bottom" then
+      love.graphics.translate(0, h - text_height)
+    end
+
+    love.graphics.printf(text_state.text, 0, 0, w, justify)
+    love.graphics.pop()
+  end
+
+  return View(table.mush({}, text_state, style), { self })
 end
 
 return TextView

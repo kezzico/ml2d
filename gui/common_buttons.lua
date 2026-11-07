@@ -5,7 +5,7 @@ local function BackButton()
 	local go_back = function() navigator:pop()  end
 
 	return Clickable(go_back, { 
-		TextView("<", { size = 18, color = hexToColor(0xFFFFFF) })
+		TextView("<", { font = { "assets/fonts/Orbitron-Medium.ttf", size = 36 }, color = hexToColor(0xFFFFFF) })
 	})
 end
 
@@ -13,13 +13,13 @@ local function CloseButton()
 	local reset = function() navigator:reset()  end
 
 	return Clickable(reset, { 
-		TextView("x", { size = 15, color = hexToColor(0xFFFFFF) })
+		TextView("x", { font = { "assets/fonts/Orbitron-Medium.ttf", size = 30 }, color = hexToColor(0xFFFFFF) })
 	})
 end
 
 local function PlusButton(onclick)
 	return Clickable(onclick, { 
-		TextView("+", { size = 15, color = hexToColor(0xFFFFFF) })
+		TextView("+", { font = { "assets/fonts/Orbitron-Medium.ttf", size = 30 }, color = hexToColor(0xFFFFFF) })
 	})
 end
 

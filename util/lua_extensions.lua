@@ -126,6 +126,7 @@ function math.magnitude(v)
 end
 
 function math.distance(a, b)
+  b = b or { 0, 0 }
   return math.sqrt((b[1] - a[1])^2 + (b[2] - a[2])^2 )
 end
 
