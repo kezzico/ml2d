@@ -6,8 +6,33 @@ local function Cache()
 	local image_cache = { }
 
 	local svg_cache = { }
+
+	local json_cache = { }
 	
 	return {
+		json = function(url, json_text)
+			local url_as_key = url:gsub("[^%w]", "_")
+			-- save to cache mode
+			if json_text ~= nil then
+				print("[CACHE] saving json to cache for url "..url)
+				json_cache[url_as_key] = json_text
+				love.filesystem.createDirectory("json")
+				love.filesystem.write("json/" .. url_as_key, json_text)
+
+			-- load from cache mode
+			elseif json_cache[url_as_key] ~= nil then
+				print("[CACHE] loading json from in memory cache for url "..url)
+				return json_cache[url_as_key]
+			else
+				json_text = love.filesystem.read("string", url_as_key)
+
+				print("[CACHE] loading json from disk for url "..url)
+				print("[CACHE] json text: "..tostring(json_text))
+				return json_text
+			end
+		end,
+
+
 		svg = function(svgname)
 			if svg_cache[svgname] == nil then
 				print("[cache hit]", svgname)
