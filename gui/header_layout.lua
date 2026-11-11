@@ -19,7 +19,7 @@ local function HeaderLayout(title, child)
                 backgroundColor = styles.colors.header_background or default_header_color,
                 SvgButton({ "ml2d/assets/gfx/nav_back.svg#back" , padding = { 27, 27 } }, function() navigator:pop() end), 
                 TextView(title, {
-                    font = styles.fonts.medium
+                    font = styles.fonts.header or styles.fonts.default
                 }), View { }
             },
 

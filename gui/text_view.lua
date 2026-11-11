@@ -41,7 +41,7 @@ local function TextView(text_state_or_text, style)
   end
 
   self.draw = function(self, w, h)
-    local font_spec = text_state.font or style.font or styles.fonts.medium
+    local font_spec = text_state.font or style.font or styles.fonts.default
     local font = type(font_spec) == "table" and cache.font(font_spec) or font_spec
     local _, wrappedtext = font:getWrap(text_state.text, w)
     local text_height = font:getHeight() * #wrappedtext
