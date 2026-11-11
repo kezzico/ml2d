@@ -9,22 +9,27 @@
 
 
 local shader_source =[[
-extern float stop_offsets[8];
-extern float stop_colors[32];
-extern int stop_count;
+// Keep effect()'s signature unqualified to match LOVE's up-front declaration on GL ES.
+#ifdef GL_ES
+precision mediump float;
+#endif
 
-extern mat3 transform;
-varying vec2 svg_position;
+extern highp float stop_offsets[8];
+extern highp float stop_colors[32];
+extern highp int stop_count;
+
+extern highp mat3 transform;
+varying highp vec2 svg_position;
 
 #ifdef VERTEX
-vec4 position(mat4 transform_projection, vec4 vertex_position) {
+highp vec4 position(highp mat4 transform_projection, highp vec4 vertex_position) {
     svg_position = vertex_position.xy;
     return transform_projection * vertex_position;
 }
 #endif
 
 // returns vec4 with rgba from index i*4
-vec4 get_stop_color(int i) {
+highp vec4 get_stop_color(highp int i) {
     return vec4(
         stop_colors[i * 4 + 0],
         stop_colors[i * 4 + 1],
@@ -34,18 +39,18 @@ vec4 get_stop_color(int i) {
 }
 
 // max of 4 color stops
-vec4 gradient_color(float t) {
+highp vec4 gradient_color(highp float t) {
     // Before first stop
     if (t <= stop_offsets[0])
         return get_stop_color(0);
 
     // Find the pair containing t
-    for (int i = 0; i < stop_count - 1; i++) {
-        float a = stop_offsets[i];
-        float b = stop_offsets[i + 1];
+    for (highp int i = 0; i < stop_count - 1; i++) {
+        highp float a = stop_offsets[i];
+        highp float b = stop_offsets[i + 1];
 
         if (t <= b) {
-            float f = (t - a) / (b - a);
+            highp float f = (t - a) / (b - a);
             return mix(
                 get_stop_color(i),
                 get_stop_color(i + 1),
@@ -59,11 +64,11 @@ vec4 gradient_color(float t) {
 }
 
 vec4 effect(vec4 color, Image tex, vec2 uv, vec2 sc) {
-    vec3 local_pos = inverse(transform) * vec3(svg_position, 1.0);
+    highp vec3 local_pos = inverse(transform) * vec3(svg_position, 1.0);
 
     // affinity gradients always runs on the X axis,
     // so assume local_pos.y will be 0 after applying the inverse transform
-    float t = clamp(local_pos.x, 0.0, 1.0);
+    highp float t = clamp(local_pos.x, 0.0, 1.0);
 
     // look through the stops and mix the right color based on t
     return gradient_color(t);
