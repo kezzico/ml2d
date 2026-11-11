@@ -16,11 +16,11 @@ local function SafeAreaView(state_and_children)
         
         for i = 1, #state_and_children do
             local child = state_and_children[i]
-            child:draw(sw - sx, sw - sx)
+            child:draw(sw - sx, sh - sy)
         end
 
-        text_state.text = string.mush("--", "sx", sx, "sy", sy, "sw", sw, "sh", sh)
-        diag:draw(w, h)
+        -- text_state.text = string.mush("--", "sx", sx, "sy", sy, "sw", sw, "sh", sh)
+        -- diag:draw(w, h)
     end
     return View(state_and_children, { self })
 end
